@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+ <data-sources/>
+ <form-beans>
+ 	<form-bean name="loginForm" type="com.madgrid.admin.form.LoginForm"/>
+ 	<form-bean name="adminUserForm" type="com.madgrid.admin.form.AdminUserForm"/>
+ 	<form-bean name="affiliationUserForm" type="com.madgrid.admin.form.AffiliationUserForm"/>
+ 	<form-bean name="userForm" type="com.madgrid.admin.form.UserForm"/>
+ 	<form-bean name="userMessageForm" type="com.madgrid.admin.form.UserMessageForm"/>
+ 	<form-bean name="messageAllPromotionForm" type="com.madgrid.admin.form.MessageAllPromotionForm"/>
+ 	<form-bean name="itemForm" type="com.madgrid.admin.form.ItemForm"/>
+ 	<form-bean name="gridForm" type="com.madgrid.admin.form.GridForm"/>
+ 	<form-bean name="winForm" type="com.madgrid.admin.form.WinForm"/>
+ 	<form-bean name="promotionForm" type="com.madgrid.admin.form.PromotionForm"/>
+ 	<form-bean name="parameterForm" type="com.madgrid.admin.form.ParameterForm"/>
+ 	<form-bean name="promoCodeForm" type="com.madgrid.admin.form.PromoCodeForm"/>
+ 	<form-bean name="answerForm" type="com.madgrid.admin.form.AnswerForm"/>
+ 	<form-bean name="tweetForm" type="com.madgrid.admin.form.TweetForm"/>
+ 	<form-bean name="affiliationContestForm" type="com.madgrid.admin.form.AffiliationContestForm"/>
+ </form-beans>
+ <global-exceptions>
+ 
+ </global-exceptions>
+ <global-forwards>
+  <forward name="session" path="/index.jsp"/>
+ </global-forwards>
+  <action-mappings  >
+  
+<action input="/index.jsp" name="loginForm" path="/adminuser/login" scope="request" type="com.madgrid.admin.action.AdminLoginAction" validate="true">
+     
+	<forward name="ok" path="/WEB-INF/jsp/adminuser/start.jsp"/>
+</action>  
+<action path="/adminuser/logoff" scope="request" type="com.madgrid.admin.action.AdminLogoffAction" validate="false">
+    
+	<forward name="ok" path="/index.jsp"/>
+</action>
+<action path="/adminuser/list" scope="request" type="com.madgrid.admin.action.AdminUserListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/adminuser/list.jsp"/>
+</action>
+<action path="/adminuser/edit" scope="request" type="com.madgrid.admin.action.AdminUserEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/adminuser/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/adminuser/edit.jsp" name="adminUserForm" path="/adminuser/save" scope="request" type="com.madgrid.admin.action.AdminUserSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/adminuser/list"/>
+</action>
+<action path="/adminuser/delete" scope="request" type="com.madgrid.admin.action.AdminUserDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/adminuser/list"/>
+</action>
+
+
+
+
+<action path="/affiliationcontest/list" scope="request" type="com.madgrid.admin.action.AffiliationContestListAction" validate="false">
+	
+	<forward name="ok" path="/WEB-INF/jsp/affiliationcontest/list.jsp"/>
+</action>
+<action path="/affiliationcontest/edit" scope="request" type="com.madgrid.admin.action.AffiliationContestEditAction" validate="false">
+	
+	<forward name="ok" path="/WEB-INF/jsp/affiliationcontest/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/affiliationcontest/edit.jsp" name="affiliationContestForm" path="/affiliationcontest/save" scope="request" type="com.madgrid.admin.action.AffiliationContestSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/affiliationcontest/list"/>
+</action>
+
+
+
+
+
+
+
+
+<action path="/affiliationuser/list" scope="request" type="com.madgrid.admin.action.AffiliationUserListAction" validate="false">
+	
+	<forward name="ok" path="/WEB-INF/jsp/affiliationuser/list.jsp"/>
+</action>
+
+<action path="/affiliationuser/givecredits" scope="request" type="com.madgrid.admin.action.AffiliationUserGiveCreditsAction" validate="false">
+	
+	<forward name="ok" path="/WEB-INF/jsp/affiliationuser/list.jsp"/>
+</action>
+<action path="/affiliationuser/edit" scope="request" type="com.madgrid.admin.action.AffiliationUserEditAction" validate="false">
+	
+	<forward name="ok" path="/WEB-INF/jsp/affiliationuser/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/affiliationuser/edit.jsp" name="affiliationUserForm" path="/affiliationuser/save" scope="request" type="com.madgrid.admin.action.AffiliationUserSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/affiliationuser/list"/>
+</action>
+<action path="/affiliationuser/delete" scope="request" type="com.madgrid.admin.action.AffiliationUserDeleteAction" validate="false">
+	
+	<forward name="ok" path="/do/affiliationuser/list"/>
+</action>
+
+
+<action path="/affiliationuser/sendpaymentedit" scope="request" type="com.madgrid.admin.action.AffiliationUserSendPaymentEditAction" validate="false">
+	
+    <forward name="ok" path="/WEB-INF/jsp/affiliationuser/sendpaymentedit.jsp"/>
+</action>
+<action path="/affiliationuser/sendpayment" scope="request" type="com.madgrid.admin.action.AffiliationUserSendPaymentAction" validate="false">
+	
+	<forward name="ok" path="/do/affiliationuser/list"/>
+</action>
+
+<action path="/dashboard/list" scope="request" type="com.madgrid.admin.action.DashboardListAction" validate="false">
+	
+	<forward name="ok" path="/WEB-INF/jsp/dashboard/list.jsp"/>
+</action>
+
+<action path="/win/messageSend" scope="request" type="com.madgrid.admin.action.WinMessageSendAction" validate="false">
+	
+</action>
+
+<action path="/affiliationuser/requestMessageSend" scope="request" type="com.madgrid.admin.action.AffiliationUserRequestMessageSendAction" validate="false">
+	
+</action>
+
+<action path="/affiliationuser/markAsPayed" scope="request" type="com.madgrid.admin.action.AffiliationUserMarkAsPayedAction" validate="false">
+	
+</action>
+
+
+<action path="/user/list" scope="request" type="com.madgrid.admin.action.UserListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/user/list.jsp"/>
+</action>
+<action path="/user/edit" scope="request" type="com.madgrid.admin.action.UserEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/user/edit.jsp"/>
+</action>
+<action path="/user/message" scope="request" type="com.madgrid.admin.action.UserMessageAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/user/message.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/user/message.jsp" name="userMessageForm" path="/user/messageSend" scope="request" type="com.madgrid.admin.action.UserMessageSendAction" validate="true">
+    
+	<forward name="ok" path="/do/user/list"/>
+</action>
+
+<action path="/user/messageAll" scope="request" type="com.madgrid.admin.action.UserMessageAllAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/user/messageAll.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/user/messageAll.jsp" name="userMessageForm" path="/user/messageAllSend" scope="request" type="com.madgrid.admin.action.UserMessageAllSendAction" validate="true">
+    
+	<forward name="ok" path="/do/user/list"/>
+</action>
+
+
+
+<action path="/user/messageAllPromotion" scope="request" type="com.madgrid.admin.action.UserMessageAllPromotionAction" validate="false">
+	<forward name="ok" path="/WEB-INF/jsp/user/messageAllPromotion.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/user/messageAllPromotion.jsp" name="messageAllPromotionForm" path="/user/messageAllPromotionSend" scope="request" type="com.madgrid.admin.action.UserMessageAllPromotionSendAction" validate="true">
+    
+	<forward name="ok" path="/do/user/list"/>
+</action>
+
+
+<action  path="/user/messageAllWithCredits" scope="request" type="com.madgrid.admin.action.UserMessageAllWithCreditsAction" >
+    
+	<forward name="ok" path="/do/user/list"/>
+</action>
+
+
+<action path="/affiliationuser/message" scope="request" type="com.madgrid.admin.action.AffiliationUserMessageAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/affiliationuser/message.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/affiliationuser/message.jsp" name="userMessageForm" path="/affiliationuser/messageSend" scope="request" type="com.madgrid.admin.action.AffiliationUserMessageSendAction" validate="true">
+    
+	<forward name="ok" path="/do/affiliationuser/list"/>
+</action>
+
+
+
+<action path="/affiliationuser/messageAll" scope="request" type="com.madgrid.admin.action.AffiliationUserMessageAllAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/affiliationuser/messageAll.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/affiliationuser/messageAll.jsp" name="userMessageForm" path="/affiliationuser/messageAllSend" scope="request" type="com.madgrid.admin.action.AffiliationUserMessageAllSendAction" validate="true">
+    
+	<forward name="ok" path="/do/affiliationuser/list"/>
+</action>
+
+
+
+<action input="/WEB-INF/jsp/user/edit.jsp" name="userForm" path="/user/save" scope="request" type="com.madgrid.admin.action.UserSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/user/list"/>
+</action>
+<action path="/user/delete" scope="request" type="com.madgrid.admin.action.UserDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/user/list"/>
+	<forward name="ko" path="/WEB-INF/jsp/user/error.jsp"/>
+</action>
+
+<action path="/item/list" scope="request" type="com.madgrid.admin.action.ItemListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/item/list.jsp"/>
+</action>
+<action path="/item/edit" scope="request" type="com.madgrid.admin.action.ItemEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/item/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/item/edit.jsp" name="itemForm" path="/item/save" scope="request" type="com.madgrid.admin.action.ItemSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/item/list"/>
+</action>
+<action path="/item/delete" scope="request" type="com.madgrid.admin.action.ItemDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/item/list"/>
+</action>
+<action path="/item/pictureDelete" scope="request" type="com.madgrid.admin.action.ItemPictureDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/item/list"/>
+</action>
+
+
+<action path="/grid/list" scope="request" type="com.madgrid.admin.action.GridListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/grid/list.jsp"/>
+</action>
+<action path="/grid/edit" scope="request" type="com.madgrid.admin.action.GridEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/grid/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/grid/edit.jsp" name="gridForm" path="/grid/save" scope="request" type="com.madgrid.admin.action.GridSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/grid/list"/>
+</action>
+<action path="/grid/delete" scope="request" type="com.madgrid.admin.action.GridDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/grid/list"/>
+</action>
+
+<action path="/win/listAll" scope="request" type="com.madgrid.admin.action.WinListAllAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/win/listAll.jsp"/>
+</action>
+
+
+<action path="/win/payBitcoins" scope="request" type="com.madgrid.admin.action.WinPayBitcoinsAction" validate="false">
+    
+	<forward name="ok" path="/do/win/listAll"/>
+	<forward name="ko" path="/WEB-INF/jsp/win/error.jsp"/>
+</action>
+
+<action path="/win/listSent" scope="request" type="com.madgrid.admin.action.WinListSentAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/win/listSent.jsp"/>
+</action>
+
+<action path="/win/listDeliveryRequested" scope="request" type="com.madgrid.admin.action.WinListDeliveryRequestedAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/win/listDeliveryRequested.jsp"/>
+</action>
+
+<action path="/win/edit" scope="request" type="com.madgrid.admin.action.WinEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/win/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/win/edit.jsp" name="winForm" path="/win/save" scope="request" type="com.madgrid.admin.action.WinSaveAction" validate="false">
+    
+	<forward name="ok" path="/do/win/listAll"/>
+</action>
+
+<action path="/promotion/list" scope="request" type="com.madgrid.admin.action.PromotionListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/promotion/list.jsp"/>
+</action>
+<action path="/promotion/edit" scope="request" type="com.madgrid.admin.action.PromotionEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/promotion/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/promotion/edit.jsp" name="promotionForm" path="/promotion/save" scope="request" type="com.madgrid.admin.action.PromotionSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/promotion/list"/>
+</action>
+<action path="/promotion/delete" scope="request" type="com.madgrid.admin.action.PromotionDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/promotion/list"/>
+</action>
+
+<action path="/parameter/list" scope="request" type="com.madgrid.admin.action.ParameterListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/parameter/list.jsp"/>
+</action>
+<action path="/parameter/edit" scope="request" type="com.madgrid.admin.action.ParameterEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/parameter/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/parameter/edit.jsp" name="parameterForm" path="/parameter/save" scope="request" type="com.madgrid.admin.action.ParameterSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/parameter/list"/>
+</action>
+<action path="/parameter/delete" scope="request" type="com.madgrid.admin.action.ParameterDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/parameter/list"/>
+</action>
+
+<action path="/restart/edit" scope="request" type="com.madgrid.admin.action.RestartEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/restart/edit.jsp"/>
+</action>
+<action path="/restart/save" scope="request" type="com.madgrid.admin.action.RestartSaveAction" validate="false">
+    
+	<forward name="ok" path="/do/restart/edit" redirect="true"/>
+</action>
+<action path="/restart/delete" scope="request" type="com.madgrid.admin.action.RestartDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/restart/edit" redirect="true"/>
+</action>
+
+
+<action path="/promocode/list" scope="request" type="com.madgrid.admin.action.PromoCodeListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/promocode/list.jsp"/>
+</action>
+<action path="/promocode/edit" scope="request" type="com.madgrid.admin.action.PromoCodeEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/promocode/edit.jsp"/>
+</action>
+<action input="/WEB-INF/jsp/promocode/edit.jsp" name="promoCodeForm" path="/promocode/save" scope="request" type="com.madgrid.admin.action.PromoCodeSaveAction" validate="true">
+    
+	<forward name="ok" path="/do/promocode/list"/>
+</action>
+<action path="/promocode/delete" scope="request" type="com.madgrid.admin.action.PromoCodeDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/promocode/list"/>
+</action>
+
+<action path="/message/list" scope="request" type="com.madgrid.admin.action.MessageListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/message/list.jsp"/>
+</action>
+<action path="/message/edit" scope="request" type="com.madgrid.admin.action.MessageEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/message/edit.jsp"/>
+</action>
+<action path="/message/delete" scope="request" type="com.madgrid.admin.action.MessageDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/message/list"/>
+</action>
+<action path="/message/markasnotread" scope="request" type="com.madgrid.admin.action.MessageMarkAsNotReadAction" validate="false">
+    
+	<forward name="ok" path="/do/message/list"/>
+</action>
+
+<action path="/answer/edit" scope="request" type="com.madgrid.admin.action.AnswerAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/message/answer.jsp"/>
+</action>
+
+<action input="/WEB-INF/jsp/message/answer.jsp" name="answerForm" path="/answer/send" scope="request" type="com.madgrid.admin.action.AnswerSendAction" validate="true">
+    
+	<forward name="ok" path="/do/message/list"/>
+</action>
+
+<action path="/grid/changeSeconds" scope="request" type="com.madgrid.admin.action.GridChangeSecondsAction" validate="false">
+	<forward name="ok" path="/do/grid/list" redirect="true"/>
+</action>
+
+<action path="/tweet/list" scope="request" type="com.madgrid.admin.action.TweetListAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/tweet/list.jsp"/>
+</action>
+
+<action path="/tweet/edit" scope="request" type="com.madgrid.admin.action.TweetEditAction" validate="false">
+    
+	<forward name="ok" path="/WEB-INF/jsp/tweet/edit.jsp"/>
+</action>
+
+<action input="/WEB-INF/jsp/tweet/edit.jsp" name="tweetForm" path="/tweet/save" scope="request" type="com.madgrid.admin.action.TweetSaveAction" validate="false">
+    
+	<forward name="ok" path="/do/tweet/list"/>
+</action>
+<action path="/tweet/delete" scope="request" type="com.madgrid.admin.action.TweetDeleteAction" validate="false">
+    
+	<forward name="ok" path="/do/tweet/list"/>
+</action>
+
+<action path="/tweet/messageSend" scope="request" type="com.madgrid.admin.action.TweetMessageSendAction" validate="false">
+	
+</action>
+    
+ </action-mappings>
+  <controller />
+  <message-resources null="false" parameter="madgridMessageResources"/>
+ <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+  <set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+ </plug-in>
+ 
+ 
+
+</struts-config>

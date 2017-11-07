@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+     
+<!DOCTYPE descriptor-repository PUBLIC
+       "-//Apache Software Foundation//DTD OJB Repository//EN"
+       "repository.dtd">
+
+
+<descriptor-repository version="1.0" isolation-level="read-uncommitted">
+
+ <!-- include all used database connections -->
+ 
+ <jdbc-connection-descriptor
+   		jcd-alias="default"
+   		default-connection="true"
+   		platform="MySQL"
+   		jdbc-level="2.0"
+   		driver="com.mysql.jdbc.Driver"
+   		protocol="jdbc"
+   		subprotocol="mysql"
+   		dbalias="//localhost:3306/madgrid?relaxAutoCommit=true"
+   		username="madgrid"
+   		password="7Gek2PpAmd"  
+        eager-release="true"
+   		batch-mode="false"
+        useAutoCommit="0"
+        ignoreAutoCommitExceptions="true"
+     >
+
+        <connection-pool
+        maxActive="50"
+	    whenExhaustedAction="0"
+	    maxWait="30"
+	    maxIdle="10"
+	    timeBetweenEvictionRunsMillis="10000"
+	    minEvictableIdleTimeMillis="10000"
+        validationQuery="" />
+
+        <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
+            <attribute attribute-name="grabSize" attribute-value="20"/>
+            <attribute attribute-name="autoNaming" attribute-value="true"/>
+            <attribute attribute-name="globalSequenceId" attribute-value="false"/>
+            <attribute attribute-name="globalSequenceStart" attribute-value="10000"/>
+        </sequence-manager>
+   </jdbc-connection-descriptor>
+
+
+    <!-- include ojb internal mappings here -->
+    <class-descriptor
+   	  class="org.apache.ojb.broker.util.sequence.HighLowSequence"
+   	  table="OJB_HL_SEQ"
+   >
+      <field-descriptor
+         name="tableName"
+         column="TABLENAME"
+         jdbc-type="VARCHAR"
+         primarykey="true"
+      />
+      <field-descriptor
+         name="fieldName"
+         column="FIELDNAME"
+         jdbc-type="VARCHAR"
+         primarykey="true"
+      />
+      <field-descriptor
+         name="maxKey"
+         column="MAX_KEY"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="grabSize"
+         column="GRAB_SIZE"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="version"
+         column="VERSION"
+         jdbc-type="INTEGER"
+         locking="true"
+      />
+   </class-descriptor>
+
+
+<!-- The OJB Lock Table -->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.locking.LockEntry"
+   	  table="OJB_LOCKENTRY"
+   >
+      <field-descriptor
+         name="oidString"
+         column="OID_"
+         jdbc-type="VARCHAR"
+         primarykey="true"
+      />
+      <field-descriptor
+         name="transactionId"
+         column="TX_ID"
+         jdbc-type="VARCHAR"
+         primarykey="true"
+      />
+      <field-descriptor
+         name="timestamp"
+         column="TIMESTAMP_"
+         jdbc-type="BIGINT"
+      />
+      <field-descriptor
+         name="isolationLevel"
+         column="ISOLATIONLEVEL"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="lockType"
+         column="LOCKTYPE"
+         jdbc-type="INTEGER"
+      />
+   </class-descriptor>
+
+
+<!-- THIS IS THE OJB NAMED ROOTS TABLE, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.NamedRootsEntry"
+   	  table="OJB_NRM"
+   >
+      <field-descriptor
+         name="name"
+         column="NAME"
+         jdbc-type="VARCHAR"
+         primarykey="true"
+      />
+      <field-descriptor
+         name="oid"
+         column="OID_"
+         jdbc-type="LONGVARBINARY"
+      />
+   </class-descriptor>
+
+<!-- THIS IS THE OJB DLIST IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.collections.DListImpl"
+   	  table="OJB_DLIST"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="size"
+         column="SIZE_"
+         jdbc-type="INTEGER"
+      />
+      <collection-descriptor
+         name="elements"
+         element-class-ref="org.apache.ojb.odmg.collections.DListEntry"
+      >
+         <inverse-foreignkey field-ref="dlistId"/>
+      </collection-descriptor>
+   </class-descriptor>
+
+<!-- THIS IS THE OJB DLIST ENTRY IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+      class="org.apache.ojb.odmg.collections.DListEntry"
+      table="OJB_DLIST_ENTRIES"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="dlistId"
+         column="DLIST_ID"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="position"
+         column="POSITION_"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="oid"
+         column="OID_"
+         jdbc-type="LONGVARBINARY"
+         conversion="org.apache.ojb.broker.accesslayer.conversions.Object2ByteArrFieldConversion"
+      />
+   </class-descriptor>
+
+   <!-- THIS IS THE OJB DBAG IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.collections.DBagImpl"
+   	  table="OJB_DLIST"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="size"
+         column="SIZE_"
+         jdbc-type="INTEGER"
+      />
+      <collection-descriptor
+         name="elements"
+         element-class-ref="org.apache.ojb.odmg.collections.DListEntry"
+      >
+         <inverse-foreignkey field-ref="dlistId"/>
+      </collection-descriptor>
+   </class-descriptor>
+
+<!-- THIS IS THE OJB DSET IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.collections.DSetImpl"
+   	  table="OJB_DSET"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="size"
+         column="SIZE_"
+         jdbc-type="INTEGER"
+      />
+      <collection-descriptor
+         name="elements"
+         element-class-ref="org.apache.ojb.odmg.collections.DSetEntry"
+      >
+         <inverse-foreignkey field-ref="dlistId"/>
+      </collection-descriptor>
+   </class-descriptor>
+
+<!-- THIS IS THE OJB DSET ENTRY IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.collections.DSetEntry"
+   	  table="OJB_DSET_ENTRIES"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="dlistId"
+         column="DLIST_ID"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="position"
+         column="POSITION_"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="oid"
+         column="OID_"
+         jdbc-type="LONGVARBINARY"
+         conversion="org.apache.ojb.broker.accesslayer.conversions.Object2ByteArrFieldConversion"
+      />
+   </class-descriptor>
+
+<!-- THIS IS THE OJB DMAP IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.collections.DMapImpl"
+   	  table="OJB_DMAP"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="size"
+         column="SIZE_"
+         jdbc-type="INTEGER"
+      />
+      <collection-descriptor
+         name="entries"
+         element-class-ref="org.apache.ojb.odmg.collections.DMapEntry"
+         collection-class="org.apache.ojb.broker.util.collections.ManageableHashSet"
+      >
+         <inverse-foreignkey field-ref="dmapId"/>
+      </collection-descriptor>
+   </class-descriptor>
+
+<!-- THIS IS THE OJB DMAP ENTRY IMPLEMENTATION, DO NOT EDIT-->
+   <class-descriptor
+   	  class="org.apache.ojb.odmg.collections.DMapEntry"
+   	  table="OJB_DMAP_ENTRIES"
+   >
+      <field-descriptor
+         name="id"
+         column="ID"
+         jdbc-type="INTEGER"
+         primarykey="true"
+         autoincrement="true"
+      />
+      <field-descriptor
+         name="dmapId"
+         column="DMAP_ID"
+         jdbc-type="INTEGER"
+      />
+      <field-descriptor
+         name="keyOID"
+         column="KEY_OID"
+         jdbc-type="LONGVARBINARY"
+         conversion="org.apache.ojb.broker.accesslayer.conversions.Object2ByteArrFieldConversion"
+      />
+      <field-descriptor
+         name="valueOID"
+         column="VALUE_OID"
+         jdbc-type="LONGVARBINARY"
+         conversion="org.apache.ojb.broker.accesslayer.conversions.Object2ByteArrFieldConversion"
+      />
+   </class-descriptor>
+
+   <!-- include user defined mappings here -->
+   <class-descriptor class="com.madgrid.model.AdminUser" table="adminuser">
+	<field-descriptor name="id" 			column="id" 			jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"		column="created" 		jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"		column="modified" 		jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="login"			column="login" 			jdbc-type="VARCHAR"/>	
+	<field-descriptor name="password"		column="password" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="name"			column="name" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="surname"		column="surname" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="phoneNumber"	column="phoneNumber" 	jdbc-type="VARCHAR"/>
+	<field-descriptor name="email"			column="email" 			jdbc-type="VARCHAR"/>
+   </class-descriptor>
+   
+    <class-descriptor class="com.madgrid.model.AffiliationUser" table="affiliationuser">
+	<field-descriptor name="id" 							column="id" 							jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"						column="created" 						jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"						column="modified" 						jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="login"							column="login" 							jdbc-type="VARCHAR"/>	
+	<field-descriptor name="password"						column="password" 						jdbc-type="VARCHAR"/>
+	<field-descriptor name="name"							column="name" 							jdbc-type="VARCHAR"/>
+	<field-descriptor name="url"							column="url" 							jdbc-type="VARCHAR"/>
+	<field-descriptor name="bitcoinAddress"					column="bitcoinAddress" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="email"							column="email" 							jdbc-type="VARCHAR"/>
+	<field-descriptor name="percentage"						column="percentage" 					jdbc-type="DOUBLE"/>
+	<field-descriptor name="lastLogin"						column="lastLogin" 						jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="askedForTransfer" 				column="askedForTransfer" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="sendEmailAlerts" 				column="sendEmailAlerts" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="creditAlreadyClaimed" 			column="creditAlreadyClaimed" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="paymentRequestValidated" 		column="paymentRequestValidated" 		jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="codeForPasswordRestart" 		column="codeForPasswordRestart"			jdbc-type="VARCHAR"/>
+	<field-descriptor name="codeForPasswordRestartCreated" 	column="codeForPasswordRestartCreated" 	jdbc-type="TIMESTAMP" 		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	
+   </class-descriptor>
+   
+    
+    
+    
+   <class-descriptor class="com.madgrid.model.AffiliationActivity" table="affiliationactivity">
+	<field-descriptor name="id" 						column="id" 						jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="userId" 					column="userId" 					jdbc-type="INTEGER"/>
+	<field-descriptor name="affiliationUserId" 			column="affiliationUserId" 			jdbc-type="INTEGER"/>	
+	<field-descriptor name="created"					column="created" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="type"						column="type" 						jdbc-type="INTEGER"/>
+	<field-descriptor name="totalBitcoins"				column="totalBitcoins" 				jdbc-type="DOUBLE"/>
+	<field-descriptor name="assignedBitcoins"			column="assignedBitcoins" 			jdbc-type="DOUBLE"/>
+	<field-descriptor name="alreadyPayed" 				column="alreadyPayed" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+	<reference-descriptor name="affiliationUser" class-ref="com.madgrid.model.AffiliationUser" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="affiliationUserId"/></reference-descriptor>
+   </class-descriptor>
+   
+    <class-descriptor class="com.madgrid.model.AffiliationPayment" table="affiliationpayment">
+	<field-descriptor name="id" 						column="id" 						jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="affiliationUserId" 			column="affiliationUserId" 			jdbc-type="INTEGER"/>	
+	<field-descriptor name="created"					column="created" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="bitcoins"					column="bitcoins" 					jdbc-type="DOUBLE"/>
+	<field-descriptor name="transactionId"				column="transactionId" 				jdbc-type="VARCHAR"/>
+	<reference-descriptor name="affiliationUser" class-ref="com.madgrid.model.AffiliationUser" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="affiliationUserId"/></reference-descriptor>
+   </class-descriptor>
+    
+   <class-descriptor class="com.madgrid.model.AffiliationContact" table="affiliationcontact">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="affiliationUserId" 	column="affiliationUserId" 	jdbc-type="INTEGER"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="subject"			column="subject" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="message"			column="message" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="isRead"				column="isRead" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<reference-descriptor name="affiliationUser" class-ref="com.madgrid.model.AffiliationUser" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="affiliationUserId"/></reference-descriptor>
+   </class-descriptor>
+    
+	
+   <class-descriptor class="com.madgrid.model.User" table="user">
+	<field-descriptor name="id" 						column="id" 						jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="companyAffiliationUserId" 	column="companyAffiliationUserId" 	jdbc-type="INTEGER"/>
+	<field-descriptor name="created"					column="created" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"					column="modified" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="login"						column="login" 						jdbc-type="VARCHAR"/>	
+	<field-descriptor name="password"					column="password" 					jdbc-type="VARCHAR"/>
+	<field-descriptor name="email"						column="email" 						jdbc-type="VARCHAR"/>
+	<field-descriptor name="canonicalEmail"				column="canonicalEmail" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="ip"							column="ip" 						jdbc-type="VARCHAR"/>
+	<field-descriptor name="recomendedUser" 			column="recomendedUser" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="promoCode" 					column="promoCode" 					jdbc-type="VARCHAR"/>
+	<field-descriptor name="buyCreditsPromoCode" 		column="buyCreditsPromoCode" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="buyCreditsPromoCodeText" 	column="buyCreditsPromoCodeText" 	jdbc-type="VARCHAR"/>
+	<field-descriptor name="validationCode" 			column="validationCode" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="bitcoinAddress" 			column="bitcoinAddress" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="credits" 					column="credits" 					jdbc-type="INTEGER"/>
+	<field-descriptor name="affiliatedUsers" 			column="affiliatedUsers" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="active" 					column="active" 					jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="isBeginner" 				column="isBeginner" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="validated" 					column="validated" 					jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="autoPay" 					column="autoPay" 					jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="statisticsPlayedGames" 		column="statisticsPlayedGames" 		jdbc-type="INTEGER"/>
+	<field-descriptor name="statisticsWonGames" 		column="statisticsWonGames" 		jdbc-type="INTEGER"/>
+	<field-descriptor name="statisticsBoughtBoxes" 		column="statisticsBoughtBoxes" 		jdbc-type="INTEGER"/>
+	<field-descriptor name="statisticsUsedCredits" 		column="statisticsUsedCredits" 		jdbc-type="INTEGER"/>
+	<field-descriptor name="isFraudulent" 				column="isFraudulent" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="lastLogin"					column="lastLogin" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="codeForPasswordRestart" 	column="codeForPasswordRestart"		jdbc-type="VARCHAR"/>
+	<field-descriptor name="isSubscribed" 				column="isSubscribed" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	
+	<field-descriptor name="requestPrizeSubscribed" 	column="requestPrizeSubscribed" 	jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="bitcoinSentSubscribed" 		column="bitcoinSentSubscribed" 		jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	
+	<field-descriptor name="codeForPasswordRestartCreated" column="codeForPasswordRestartCreated" jdbc-type="TIMESTAMP" conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<reference-descriptor name="companyAffiliationUser" class-ref="com.madgrid.model.AffiliationUser" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="companyAffiliationUserId"/></reference-descriptor>
+   </class-descriptor>
+	
+   <class-descriptor class="com.madgrid.model.Item" table="item">
+	<field-descriptor name="id" 					column="id" 					jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"				column="created" 				jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"				column="modified" 				jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="type" 					column="type" 					jdbc-type="INTEGER"/>
+	<field-descriptor name="credits" 				column="credits" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="name"					column="name" 					jdbc-type="VARCHAR"/>
+	<field-descriptor name="bitcoins"				column="bitcoins" 				jdbc-type="DOUBLE"/>
+	<field-descriptor name="htmlDescription"		column="htmlDescription" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="virtualPath"			column="virtualPath" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="picture1Url"			column="picture1Url" 			jdbc-type="VARCHAR"/>
+   </class-descriptor>
+   
+    <class-descriptor class="com.madgrid.model.Grid" table="grid">
+	<field-descriptor name="id" 						column="id" 						jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="itemId" 					column="itemId" 					jdbc-type="INTEGER"/>	
+	<field-descriptor name="created"					column="created" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"					column="modified" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="startDate"					column="startDate" 					jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="finishDate"					column="finishDate" 				jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="type"						column="type" 						jdbc-type="INTEGER"/>
+	<field-descriptor name="boxes"						column="boxes" 						jdbc-type="INTEGER"/>
+	<field-descriptor name="boxPrice"					column="boxPrice" 					jdbc-type="DOUBLE"/>
+	<field-descriptor name="freeBoxes"					column="freeBoxes" 					jdbc-type="INTEGER"/>
+	<field-descriptor name="boughtBoxes"				column="boughtBoxes" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="moneyWon"					column="moneyWon" 					jdbc-type="DOUBLE"/>
+	<field-descriptor name="winPos"						column="winPos" 					jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize1_1CreditPos"		column="multiPrize1_1CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize1_2CreditPos"		column="multiPrize1_2CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize1_3CreditPos"		column="multiPrize1_3CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize1_4CreditPos"		column="multiPrize1_4CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize1_5CreditPos"		column="multiPrize1_5CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize2_1CreditPos"		column="multiPrize2_1CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize2_2CreditPos"		column="multiPrize2_2CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize5CreditPos"		column="multiPrize5CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="multiPrize10CreditPos"		column="multiPrize10CreditPos"		jdbc-type="INTEGER"/>
+	<field-descriptor name="finished"					column="finished" 					jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="ongoing"					column="ongoing" 					jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="isInPartialWin"				column="isInPartialWin" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="partialWinStartTime" 		column="partialWinStartTime" 		jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="partialWinSeconds" 			column="partialWinSeconds" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="partialWinUserId" 			column="partialWinUserId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="partialWinPreviousUserId" 	column="partialWinPreviousUserId" 	jdbc-type="INTEGER"/>
+	<field-descriptor name="partialWinPreviousBoxId" 	column="partialWinPreviousBoxId" 	jdbc-type="INTEGER"/>
+	<field-descriptor name="virtualPath" 				column="virtualPath" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="winPosText" 				column="winPosText" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="winPosHash" 				column="winPosHash" 				jdbc-type="VARCHAR"/>
+	<reference-descriptor name="item" class-ref="com.madgrid.model.Item" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="itemId"/></reference-descriptor>
+	<reference-descriptor name="partialWinUser" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="partialWinUserId"/></reference-descriptor>
+	<reference-descriptor name="partialWinPreviousUser" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="partialWinPreviousUserId"/></reference-descriptor>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.Win" table="win">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="itemId" 			column="itemId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"			column="modified" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="boughtBoxes"		column="boughtBoxes" 		jdbc-type="INTEGER"/>
+	<field-descriptor name="moneySpent"			column="moneySpent" 		jdbc-type="DOUBLE"/>
+	<field-descriptor name="itemSent"			column="itemSent" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="deliveryRequested"	column="deliveryRequested" 	jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="isOnlyCredits"		column="isOnlyCredits" 		jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="bitcoinAddress"		column="bitcoinAddress" 	jdbc-type="VARCHAR"/>
+	<field-descriptor name="transactionId"		column="transactionId" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="gridType"			column="gridType" 			jdbc-type="INTEGER"/>
+	<reference-descriptor name="item" class-ref="com.madgrid.model.Item" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="itemId"/></reference-descriptor>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.UserMessage" table="usermessage">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="subject"			column="subject" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="message"			column="message" 			jdbc-type="VARCHAR"/>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.AffiliationUserMessage" table="affiliationusermessage">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="affiliationUserId" 	column="affiliationUserId" 	jdbc-type="INTEGER"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="subject"			column="subject" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="message"			column="message" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="isRead"				column="isRead" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<reference-descriptor name="affiliationUser" class-ref="com.madgrid.model.AffiliationUser" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="affiliationUserId"/></reference-descriptor>
+    </class-descriptor>
+    
+
+	<class-descriptor class="com.madgrid.model.Promotion" table="promotion">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="modified"			column="modified" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="startDate"			column="startDate" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="endDate"			column="endDate" 			jdbc-type="TIMESTAMP" 		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="name"				column="name" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="description"		column="description" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="type"				column="type" 				jdbc-type="INTEGER"/>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.PromoCode" table="promocode">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="code"				column="code" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="type"				column="type" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="count"				column="count" 				jdbc-type="INTEGER"/>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.Parameter" table="parameter">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="name"				column="name" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="value"				column="value" 				jdbc-type="VARCHAR"/>
+    </class-descriptor>
+    
+  
+    <class-descriptor class="com.madgrid.model.Box" table="box">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="gridId" 			column="gridId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="pos"				column="pos" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="type"				column="type" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="price"				column="price" 				jdbc-type="DOUBLE"/>
+	<reference-descriptor name="grid" class-ref="com.madgrid.model.Grid" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="gridId"/></reference-descriptor>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.GridHistoric" table="gridhistoric">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="type"				column="type" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="value1"				column="value1" 			jdbc-type="DOUBLE"/>
+	<field-descriptor name="value2"				column="value2" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="value3"				column="value3" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="gridId" 			column="gridId" 			jdbc-type="INTEGER"/>
+	<reference-descriptor name="grid" class-ref="com.madgrid.model.Grid" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="gridId"/></reference-descriptor>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.UserHistoric" table="userhistoric">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="type"				column="type" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="value1"				column="value1" 			jdbc-type="DOUBLE"/>
+	<field-descriptor name="value2"				column="value2" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="value3"				column="value3" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+    </class-descriptor>
+    
+    
+    <class-descriptor class="com.madgrid.model.Tweet" table="tweet">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="winId" 				column="winId" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="text"				column="text" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="paid"				column="paid" 				jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+	<reference-descriptor name="win" class-ref="com.madgrid.model.Win" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="winId"/></reference-descriptor>
+    </class-descriptor>
+    
+    <class-descriptor class="com.madgrid.model.Message" table="message">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="text"				column="text" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="isRead"				column="isRead" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="type"				column="type" 				jdbc-type="INTEGER"/>
+	<field-descriptor name="subject"			column="subject" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="email"				column="email" 				jdbc-type="VARCHAR"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+    </class-descriptor>
+    
+ 
+    
+     <class-descriptor class="com.madgrid.model.BitcoinPayment" table="bitcoinpayment">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="transactionId"		column="transactionId" 		jdbc-type="VARCHAR"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="VARCHAR"	/>
+	<field-descriptor name="receiveAddress"		column="receiveAddress" 	jdbc-type="VARCHAR"/>
+	<field-descriptor name="payerId"			column="payerId" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="bitcoins"			column="bitcoins" 			jdbc-type="DOUBLE"/>
+	<field-descriptor name="credits"			column="credits" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="loginHash"			column="loginHash" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="ip"					column="ip" 				jdbc-type="VARCHAR"/>
+    </class-descriptor>
+    
+     
+    <class-descriptor class="com.madgrid.model.Blockcypher" table="blockcypher">
+	<field-descriptor name="id" 				column="id" 				jdbc-type="INTEGER" 		primarykey="true" autoincrement="true"/>
+	<field-descriptor name="created"			column="created" 			jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="expiration"			column="expiration" 		jdbc-type="TIMESTAMP"		conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlDateFieldConversion"/>
+	<field-descriptor name="address"			column="address" 			jdbc-type="VARCHAR"/>
+	<field-descriptor name="received"			column="received" 			jdbc-type="INTEGER" 		conversion="org.apache.ojb.broker.accesslayer.conversions.Boolean2IntFieldConversion"/>
+	<field-descriptor name="userId" 			column="userId" 			jdbc-type="INTEGER"/>
+	<field-descriptor name="blockcypherId"		column="blockcypherId"		jdbc-type="VARCHAR"/>
+	<reference-descriptor name="user" class-ref="com.madgrid.model.User" auto-delete="false" auto-update="false" refresh="true"><foreignkey field-ref="userId"/></reference-descriptor>
+    </class-descriptor>
+    
+
+</descriptor-repository>

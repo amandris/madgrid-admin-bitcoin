@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_0.dtd">
+<form-validation>
+ <global>
+ 	 <constant>
+	   <constant-name>phone</constant-name>
+	   <constant-value>^\(?(\d{3})\)?[-| ]?(\d{3})[-| ]?(\d{4})$</constant-value>
+	  </constant>
+	  <constant>
+	   <constant-name>zip</constant-name>
+	   <constant-value>^\d{5}\d*$</constant-value>
+	  </constant>
+ </global>
+	<formset>
+		<form name="adminUserForm">
+			<field depends="required" property="login">
+   			</field>
+   			<field depends="required" property="name">
+   			</field>
+   			<field depends="email" property="email">
+   			</field>
+   			<field depends="mask" property="phoneNumber" >
+		   		<var>
+		            <var-name>mask</var-name>
+		            <var-value>^([69][0-9]{8}|(\+|00)(34|35)[69][0-9]{8})$</var-value>
+		        </var>
+			</field>
+		</form>
+		
+		<form name="affiliationUserForm">
+			<field depends="required" property="login">
+   			</field>
+   			<field depends="required" property="name">
+   			</field>
+   			<field depends="required" property="email">
+   			</field>
+   			<field depends="required" property="url">
+   			</field>
+   			<field depends="required,double" property="percentage">
+   			</field>
+   			<field depends="required" property="bitcoinAddress">
+   			</field>
+		</form>
+  
+ 		<form name="userForm">
+			<field depends="required" property="login">
+   			</field>
+   			<field depends="required,email" property="email">
+   			</field>
+   			<field depends="required,integer" property="credits">
+   			</field>
+		</form>
+		
+		
+ 		<form name="itemForm">
+   			<field depends="required" property="name">
+   			</field>
+   			<field depends="requiredif" property="credits">
+   				<var>
+		            <var-name>field[0]</var-name>
+		            <var-value>type</var-value>
+		        </var>
+		        <var>
+		            <var-name>fieldTest[0]</var-name>
+		            <var-value>EQUAL</var-value>
+		        </var>
+		        <var>
+		            <var-name>fieldValue[0]</var-name>
+		            <var-value>2</var-value>
+		        </var>
+		        <var>
+		            <var-name>field[1]</var-name>
+		            <var-value>type</var-value>
+		        </var>
+		        <var>
+		            <var-name>fieldTest[1]</var-name>
+		            <var-value>EQUAL</var-value>
+		        </var>
+		        <var>
+		            <var-name>fieldValue[1]</var-name>
+		            <var-value>3</var-value>
+		        </var>
+		        <var>
+		        	<var-name>fieldJoin</var-name>
+		            <var-value>OR</var-value>
+		        </var>
+   			</field>
+   			<field depends="required,maxlength" property="htmlDescription">
+   			<arg1 key="${var:maxlength}" name="maxlength" resource="false"/>
+	   			 <var>
+			     <var-name>maxlength</var-name>
+			     <var-value>1024</var-value>
+			    </var>
+   			</field>
+   			<field depends="required" property="virtualPath">
+   			</field>
+		</form>
+		
+		<form name="gridForm">
+   			<field depends="intRange" property="boxes">
+   				<arg1 name="intRange" key="${var:min}" resource="false"/>
+			    <arg2 name="intRange" key="${var:max}" resource="false"/>
+			    <var>
+	        		<var-name>min</var-name>
+			        <var-value>2</var-value>
+			    </var>
+			    <var>
+			        <var-name>max</var-name>
+	        		<var-value>10000</var-value>
+			    </var>
+   			</field>
+   			<field depends="integer,intRange" property="partialWinSeconds">
+   				<arg1 name="intRange" key="${var:min}" resource="false"/>
+			    <arg2 name="intRange" key="${var:max}" resource="false"/>
+			    <var>
+	        		<var-name>min</var-name>
+			        <var-value>10</var-value>
+			    </var>
+			    <var>
+			        <var-name>max</var-name>
+	        		<var-value>86400</var-value>
+			    </var>
+   			</field>
+   			<field depends="required" property="itemId">
+   			</field>
+   			<field depends="required" property="virtualPath">
+   			</field>
+		</form>
+		
+		
+		<form name="promotionForm">
+   			<field depends="required" property="name">
+   			</field>
+   			<field depends="required" property="startDate">
+   			</field>
+   			<field depends="required" property="endDate">
+   			</field>
+		</form>
+  
+  		<form name="parameterForm">
+   			<field depends="required" property="name">
+   			</field>
+   			<field depends="required" property="value">
+   			</field>
+		</form>
+		
+		<form name="promoCodeForm">
+   			<field depends="required" property="code">
+   			</field>
+   			<field depends="required" property="type">
+   			</field>
+   			<field depends="required,integer" property="count">
+   			</field>
+		</form>
+ </formset>
+</form-validation>
