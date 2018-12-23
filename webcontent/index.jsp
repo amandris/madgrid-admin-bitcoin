@@ -7,23 +7,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<%
-String ip = request.getRemoteAddr();
-//oficina, casa, local, casa2
-if( ip.equals("80.26.159.249") || ip.equals ("77.228.91.164") || ip.equals ("127.0.0.1") || ip.equals("81.39.153.200")){
-
-
-%>
 
 <html>
 <head>
-	<title>Administración Instantri.ch</title>
+	<title>AdministraciÃ³n Instantri.ch</title>
 </head>
 <body>
 	<table width="100%" style="font-family:Arial;">
 		<tr height="200px">
 			<td align="center">	
-				<span style="font-size:18px">Administración Instantri.ch</span>
+				<span style="font-size:18px">AdministraciÃ³n Instantri.ch</span>
 			</td>
 		</tr>
 		<tr>
@@ -63,5 +56,5 @@ if( ip.equals("80.26.159.249") || ip.equals ("77.228.91.164") || ip.equals ("127
 	</table>
 	
 </body>
-<%} %>
+
 
