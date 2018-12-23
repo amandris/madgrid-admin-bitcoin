@@ -15,10 +15,6 @@ response.addHeader( "Cache-Control", "no-cache" );
 response.addHeader( "Cache-Control", "no-store" );
 response.setDateHeader("Expires", 0);  
 
-String ip = request.getRemoteAddr();
-//oficina, casa, local, casa2
-if( ip.equals("80.26.159.249") || ip.equals("80.26.159.251") || ip.equals ("77.228.91.164") || ip.equals ("127.0.0.1") || ip.equals("81.39.153.200")){
-
 
 %>
 
@@ -59,4 +55,4 @@ if( ip.equals("80.26.159.249") || ip.equals("80.26.159.251") || ip.equals ("77.2
 		</table>
 	</body>
 </html:html>
-<%} %>
+
